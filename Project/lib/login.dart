@@ -142,6 +142,17 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
+          ElevatedButton(
+              onPressed: () async {
+                UserCredential? userCredential =
+                    await FirebaseAuth.instance.signInAnonymously();
+
+                Navigator.pushNamed(context, '/item');
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
+              ),
+              child: const Text("Guest")),
         ],
       ),
     );
