@@ -33,30 +33,28 @@ class _ItemPageState extends State<ItemPage> {
           },
         ),
         title: Expanded(
-                  child: Container(
-                    height: 35 ,
-                    child: TextFormField(
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black,
-                      fontSize: 20),
-                      controller: _search,
-                      decoration: const InputDecoration(
-                        hintStyle: TextStyle(fontSize: 14),
-                        hintText: '브랜드 명을 입력하세요',
-                        fillColor: Colors.white,
-                        filled: true,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return '브랜드 명을 입력해 주세요';
-                        }
-                        else {
-                          return null;
-                        }
-                      },         
-                                  ),
-                  ),
+          child: Container(
+            height: 35,
+            child: TextFormField(
+              textAlign: TextAlign.start,
+              style: TextStyle(color: Colors.black, fontSize: 20),
+              controller: _search,
+              decoration: const InputDecoration(
+                hintStyle: TextStyle(fontSize: 14),
+                hintText: '브랜드 명을 입력하세요',
+                fillColor: Colors.white,
+                filled: true,
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '브랜드 명을 입력해 주세요';
+                } else {
+                  return null;
+                }
+              },
+            ),
+          ),
+        ),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
@@ -81,7 +79,7 @@ class _ItemPageState extends State<ItemPage> {
       ),
       body: Column(
         children: [
-              Row(
+          Row(
             children: [
               Text(name! + "의 방목록"),
               IconButton(

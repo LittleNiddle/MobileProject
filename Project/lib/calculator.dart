@@ -15,13 +15,13 @@ class _CalculatePageState extends State<CalculatePage> {
   final _countController = TextEditingController();
   final _accountController = TextEditingController();
 
-  int total=0, delivery=0, count=0;
-  int pay1=0, pay2=0, pay3=0;
+  int total = 0, delivery = 0, count = 0;
+  int pay1 = 0, pay2 = 0, pay3 = 0;
   String message = "";
 
   final _formKey = GlobalKey<FormState>();
 
-  void calculate(){
+  void calculate() {
     pay1 = int.parse(_user1Controller.text);
     pay2 = int.parse(_user2Controller.text);
     pay3 = int.parse(_user3Controller.text);
@@ -29,14 +29,15 @@ class _CalculatePageState extends State<CalculatePage> {
     count = int.parse(_countController.text);
 
     total = pay1 + pay2 + pay3 + delivery;
-    pay1 += delivery~/count;
-    pay2 += delivery~/count;
-    pay3 += delivery~/count;
+    pay1 += delivery ~/ count;
+    pay2 += delivery ~/ count;
+    pay3 += delivery ~/ count;
   }
 
-  void makeMessage(){
+  void makeMessage() {
     String account = _accountController.text;
-    message = ("User1: $pay1원\nUser2: $pay2원\nUser3: $pay3원\n총액: $total원\n계좌: $account");
+    message =
+        ("User1: $pay1원\nUser2: $pay2원\nUser3: $pay3원\n총액: $total원\n계좌: $account");
   }
 
   @override
@@ -58,10 +59,12 @@ class _CalculatePageState extends State<CalculatePage> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'user가 없다면 0을 입력해 주세요';
-                  }
-                  else {
-                    if (RegExp(r"^\d+$").hasMatch(value)) {return null;}
-                    else{return '숫자만 입력해야 합니다!';}
+                  } else {
+                    if (RegExp(r"^\d+$").hasMatch(value)) {
+                      return null;
+                    } else {
+                      return '숫자만 입력해야 합니다!';
+                    }
                   }
                 },
               ),
@@ -75,10 +78,12 @@ class _CalculatePageState extends State<CalculatePage> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'user가 없다면 0을 입력해 주세요';
-                  }
-                  else {
-                    if (RegExp(r"^\d+$").hasMatch(value)) {return null;}
-                    else{return '숫자만 입력해야 합니다!';}
+                  } else {
+                    if (RegExp(r"^\d+$").hasMatch(value)) {
+                      return null;
+                    } else {
+                      return '숫자만 입력해야 합니다!';
+                    }
                   }
                 },
               ),
@@ -92,10 +97,12 @@ class _CalculatePageState extends State<CalculatePage> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'user가 없다면 0을 입력해 주세요';
-                  }
-                  else {
-                    if (RegExp(r"^\d+$").hasMatch(value)) {return null;}
-                    else{return '숫자만 입력해야 합니다!';}
+                  } else {
+                    if (RegExp(r"^\d+$").hasMatch(value)) {
+                      return null;
+                    } else {
+                      return '숫자만 입력해야 합니다!';
+                    }
                   }
                 },
               ),
@@ -109,10 +116,12 @@ class _CalculatePageState extends State<CalculatePage> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return '배달비가 없다면 0을 입력해 주세요!';
-                  }
-                  else {
-                    if (RegExp(r"^\d+$").hasMatch(value)) {return null;}
-                    else{return '숫자만 입력해야 합니다!';}
+                  } else {
+                    if (RegExp(r"^\d+$").hasMatch(value)) {
+                      return null;
+                    } else {
+                      return '숫자만 입력해야 합니다!';
+                    }
                   }
                 },
               ),
@@ -126,10 +135,12 @@ class _CalculatePageState extends State<CalculatePage> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return '인원 수를 입력해 주세요!';
-                  }
-                  else {
-                    if (RegExp(r"^\d+$").hasMatch(value)) {return null;}
-                    else{return '숫자만 입력해야 합니다!';}
+                  } else {
+                    if (RegExp(r"^\d+$").hasMatch(value)) {
+                      return null;
+                    } else {
+                      return '숫자만 입력해야 합니다!';
+                    }
                   }
                 },
               ),

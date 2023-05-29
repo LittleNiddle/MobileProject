@@ -56,25 +56,25 @@ class _LoginPageState extends State<LoginPage> {
             width: 300,
             height: 300,
             child: FutureBuilder<String>(
-                        future: firebase_storage
-                          .FirebaseStorage.instance
-                          .ref()
-                          .child('logo.png').getDownloadURL(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<String> imageUrlSnapshot) {
-                          if (imageUrlSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          }
+              future: firebase_storage.FirebaseStorage.instance
+                  .ref()
+                  .child('logo.png')
+                  .getDownloadURL(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<String> imageUrlSnapshot) {
+                if (imageUrlSnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
 
-                          if (imageUrlSnapshot.hasError) {
-                            return Text('Error: ${imageUrlSnapshot.error}');
-                          }
+                if (imageUrlSnapshot.hasError) {
+                  return Text('Error: ${imageUrlSnapshot.error}');
+                }
 
-                          String? imageUrl = imageUrlSnapshot.data;
-                          return Image.network(imageUrl!);
-                        },
-                      ),
+                String? imageUrl = imageUrlSnapshot.data;
+                return Image.network(imageUrl!);
+              },
+            ),
           ),
           const SizedBox(
             height: 30,
