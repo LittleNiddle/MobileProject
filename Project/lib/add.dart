@@ -59,6 +59,8 @@ class _AddPageState extends State<AddPage> {
                 'account': account.text,
               });
 
+              docRef.update({'roomId': docRef.id});
+
               docRef.collection('texts').doc(uid).set({
                 'text': name! + "님이 입장하셨습니다.",
                 'timestamp': FieldValue.serverTimestamp(),
