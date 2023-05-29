@@ -30,7 +30,7 @@ class _ItemPageState extends State<ItemPage> {
             Navigator.pop(context);
           },
         ),
-        title: Text(name!),
+        //title: Text(name! + "의 방목록"),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
@@ -67,24 +67,71 @@ class _ItemPageState extends State<ItemPage> {
                   final docs = snapshot.data!.docs
                       .where((doc) => doc['uid'].contains(cuser!.uid))
                       .toList();
-                  ;
                   return GridView.builder(
                     itemCount: docs.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                     ),
                     itemBuilder: (context, index) {
-                      return Card(
-                        child: Expanded(
-                          child: Column(
-                            children: <Widget>[
-                              Text("브랜드: " + docs[index]['brand']),
-                              Text("배달 장소: " + docs[index]['place']),
-                              Text("현재 인원: 3/" +
-                                  docs[index]['count'].toString()),
-                            ],
-                          ),
-                        ),
+                      firebase_storage.Reference storageRef = firebase_storage
+                          .FirebaseStorage.instance
+                          .ref()
+                          .child(docs[index]['brand'] + '.png');
+
+                      return FutureBuilder<String>(
+                        future: storageRef.getDownloadURL(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> imageUrlSnapshot) {
+                          if (imageUrlSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+
+                          if (imageUrlSnapshot.hasError) {
+                            return Text('Error: ${imageUrlSnapshot.error}');
+                          }
+
+                          String? imageUrl = imageUrlSnapshot.data;
+
+                          return Card(
+                            child: Column(
+                              children: <Widget>[
+                                AspectRatio(
+                                  aspectRatio: 18 / 11,
+                                  child: Image.network(
+                                    imageUrl!,
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 20, 1, 1),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text("브랜드: " + docs[index]['brand']),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                              "배달 장소: " + docs[index]['place']),
+                                          const SizedBox(height: 5),
+                                          Text("현재 인원: 3/" +
+                                              docs[index]['count'].toString()),
+                                        ],
+                                      ),
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: const Text('Enter'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       );
                     },
                   );

@@ -69,10 +69,6 @@ class _LoginPageState extends State<LoginPage> {
             onTap: () async {
               UserCredential? userCredential = await signInWithGoogle();
               final User? user = userCredential.user;
-              var snapShot = await FirebaseFirestore.instance
-                  .collection('user')
-                  .where('uid', isEqualTo: user!.uid)
-                  .get();
 
               Navigator.pushNamed(context, '/item');
             },
