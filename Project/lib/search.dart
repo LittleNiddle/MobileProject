@@ -6,23 +6,25 @@ import 'app_state.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class ItemPage extends StatefulWidget {
-  const ItemPage({Key? key}) : super(key: key);
+class SearchPage extends StatefulWidget {
+  const SearchPage({Key? key}) : super(key: key);
   @override
-  _ItemPageState createState() => _ItemPageState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _ItemPageState extends State<ItemPage> {
+class _SearchPageState extends State<SearchPage> {
   String formattedDateTime = "";
-  final TextEditingController brand = TextEditingController();
+  
   @override
   Widget build(BuildContext context) {
+    final String brand = ModalRoute.of(context)!.settings.arguments as String;
+
     FirebaseAuth auth = FirebaseAuth.instance;
     User? cuser = auth.currentUser;
     firebase_storage.Reference storageRef = firebase_storage
         .FirebaseStorage.instance
         .ref()
-        .child(brand.text + '.png');
+        .child(brand + '.png');
 
     return Scaffold(
       appBar: AppBar(
@@ -40,15 +42,6 @@ class _ItemPageState extends State<ItemPage> {
       ),
       body: Column(
         children: [
-          Row(
-            children: [
-              TextField(
-                controller: brand,
-                decoration: const InputDecoration(hintText: '브랜드 명'),
-              ),
-              const Icon(Icons.search),
-            ],
-          ),
           FutureBuilder<String>(
             future: storageRef.getDownloadURL(),
             builder:
@@ -74,7 +67,7 @@ class _ItemPageState extends State<ItemPage> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('rooms')
-                  .where('brand', isEqualTo: brand.text)
+                  .where('brand', isEqualTo: brand)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -83,6 +76,7 @@ class _ItemPageState extends State<ItemPage> {
                 } else {
                   return GridView.count(
                     crossAxisCount: 2,
+                    childAspectRatio: 18 / 11,
                     children:
                         snapshot.data!.docs.map((DocumentSnapshot document) {
                       Map<String, dynamic> data =
@@ -92,43 +86,45 @@ class _ItemPageState extends State<ItemPage> {
                       Timestamp timestamp = data['timestamp'];
                       DateTime dateTime = timestamp.toDate();
                       formattedDateTime =
-                          DateFormat('yyyy/MM/dd/kk/mm').format(dateTime);
+                          DateFormat('MM/dd/kk:mm').format(dateTime);
                       String place = data['place'];
-                      String count = data['count'];
+                      String count = data['count'].toString();
 
-                      return Card(
-                        clipBehavior: Clip.antiAlias,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 20, 1, 1),
-                              child: Row(
-                                children: [
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text("브랜드: " + brandName),
-                                        Text("배달 장소: " + place),
-                                        Text("현재 인원: 3/" + count.toString()),
-                                        Text("생성 시간: " + formattedDateTime),
-                                      ]),
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(Icons.login),
+                      return 
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            //mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.fromLTRB(20, 20, 1, 1),
+                                child: Row(
+                                  children: [
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text("브랜드: " + brandName),
+                                          Text("배달 장소: " + place),
+                                          Text("현재 인원: 3/" + count.toString()),
+                                          Text("생성 시간: " + formattedDateTime),
+                                        ]),
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: IconButton(
+                                          onPressed: () {},
+                                          icon: const Icon(Icons.login),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            )),
-                          ],
-                        ),
+                                  ],
+                                ),
+                              )),
+                            ],
+                          ),
                       );
                     }).toList(),
                   );

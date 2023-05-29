@@ -18,6 +18,8 @@ class _ItemPageState extends State<ItemPage> {
     User? cuser = auth.currentUser;
     String? name = cuser!.displayName;
 
+    final _search = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -30,16 +32,40 @@ class _ItemPageState extends State<ItemPage> {
             Navigator.pop(context);
           },
         ),
-        title: Text(name! + "의 방목록"),
+        title: Expanded(
+                  child: Container(
+                    height: 35 ,
+                    child: TextFormField(
+                      textAlign: TextAlign.start,
+                      style: TextStyle(color: Colors.black,
+                      fontSize: 20),
+                      controller: _search,
+                      decoration: const InputDecoration(
+                        hintStyle: TextStyle(fontSize: 14),
+                        hintText: '브랜드 명을 입력하세요',
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '브랜드 명을 입력해 주세요';
+                        }
+                        else {
+                          return null;
+                        }
+                      },         
+                                  ),
+                  ),
+              ),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
             icon: const Icon(
-              Icons.shopping_cart,
-              semanticLabel: 'cart',
+              Icons.search,
+              semanticLabel: 'search',
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/wishlist');
+              Navigator.pushNamed(context, '/search', arguments: _search.text);
             },
           ),
           IconButton(
@@ -55,6 +81,20 @@ class _ItemPageState extends State<ItemPage> {
       ),
       body: Column(
         children: [
+              Row(
+            children: [
+              Text(name! + "의 방목록"),
+              IconButton(
+                icon: const Icon(
+                  Icons.search,
+                  semanticLabel: 'search',
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/search');
+                },
+              ),
+            ],
+          ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream:
@@ -133,9 +173,9 @@ class _ItemPageState extends State<ItemPage> {
                                         child: Container(
                                           height: 40,
                                           width: 40,
-                                          child: FloatingActionButton(
+                                          child: IconButton(
                                             onPressed: () {},
-                                            child: Icon(Icons.login),
+                                            icon: Icon(Icons.login),
                                           ),
                                         ),
                                       ),

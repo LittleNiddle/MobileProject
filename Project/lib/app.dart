@@ -7,6 +7,8 @@ import 'Wishlist.dart';
 import 'add.dart';
 import 'modify.dart';
 import 'app_state.dart';
+import 'calculator.dart';
+import 'search.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -23,9 +25,10 @@ class App extends StatelessWidget {
         '/detail': (BuildContext context) => const DetailPage(),
         '/profile': (BuildContext context) => const ProfilePage(),
         '/wishlist': (BuildContext context) => const WishPage(),
+        '/calculate': (BuildContext context) => const CalculatePage(),
+        '/search': (BuildContext context) => const SearchPage(),
         '/': (BuildContext context) => const LoginPage(),
       },
-      theme: ThemeData.light(useMaterial3: true),
     );
   }
 }
