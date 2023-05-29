@@ -16,19 +16,21 @@ class _ItemPageState extends State<ItemPage> {
   Widget build(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? cuser = auth.currentUser;
+    String? name = cuser!.displayName;
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(
-            Icons.account_circle,
-            semanticLabel: 'profile',
+            Icons.logout,
+            semanticLabel: 'logout',
           ),
           onPressed: () {
-            Navigator.pushNamed(context, '/profile');
+            auth.signOut();
+            Navigator.pop(context);
           },
         ),
-        title: const Text('Main'),
+        title: Text(name!),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
@@ -63,7 +65,7 @@ class _ItemPageState extends State<ItemPage> {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   final docs = snapshot.data!.docs
-                      .where((doc) => doc['uid'].contains(cuser))
+                      .where((doc) => doc['uid'].contains(cuser!.uid))
                       .toList();
                   ;
                   return GridView.builder(
@@ -73,12 +75,15 @@ class _ItemPageState extends State<ItemPage> {
                     ),
                     itemBuilder: (context, index) {
                       return Card(
-                        child: Column(
-                          children: <Widget>[
-                            Text(docs[index]['brand']),
-                            Text(docs[index]['place']),
-                            Text(docs[index]['account']),
-                          ],
+                        child: Expanded(
+                          child: Column(
+                            children: <Widget>[
+                              Text("브랜드: " + docs[index]['brand']),
+                              Text("배달 장소: " + docs[index]['place']),
+                              Text("현재 인원: 3/" +
+                                  docs[index]['count'].toString()),
+                            ],
+                          ),
                         ),
                       );
                     },
