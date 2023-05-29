@@ -18,47 +18,24 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
-  XFile? _image;
-  String imageUrl = "";
+  final TextEditingController brand = TextEditingController();
+  final TextEditingController place = TextEditingController();
+  final TextEditingController account = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    defaultImage();
-  }
-
-  Future<void> defaultImage() async {
-    firebase_storage.Reference storageRef = firebase_storage
-        .FirebaseStorage.instance
-        .ref()
-        .child('Final/Handing.png');
-    String url = await storageRef.getDownloadURL();
-    setState(() {
-      imageUrl = url;
-    });
-
-    var response = await http.get(Uri.parse(url));
-    var imageData = response.bodyBytes;
-
-    firebase_storage.Reference newRef = firebase_storage
-        .FirebaseStorage.instance
-        .ref()
-        .child('Final/Handong.png');
-
-    await newRef.putData(imageData);
-
-    print('Image uploaded to new reference');
   }
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? cuser = auth.currentUser;
+    String? name = cuser!.displayName;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add', style: TextStyle(fontSize: 20)),
+        title: const Text('방 생성', style: TextStyle(fontSize: 20)),
         centerTitle: true,
         leading: Flexible(
           child: TextButton(
@@ -70,72 +47,50 @@ class _AddPageState extends State<AddPage> {
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('Save'),
+            child: const Text('Create'),
             onPressed: () async {
-              if (_image != null) {
-                firebase_storage.Reference storageReference = firebase_storage
-                    .FirebaseStorage.instance
-                    .ref()
-                    .child('Final/' + nameController.text + '.png');
+              DocumentReference docRef =
+                  await FirebaseFirestore.instance.collection('rooms').add({
+                'brand': brand.text,
+                'timestamp': FieldValue.serverTimestamp(),
+                'place': place.text,
+                'count': 0,
+                'uid': [uid],
+                'account': account.text,
+              });
 
-                await storageReference.putFile(File(_image!.path));
-                String downloadUrl = await storageReference.getDownloadURL();
+              docRef.collection('texts').doc(uid).set({
+                'text': name! + "님이 입장하셨습니다.",
+                'timestamp': FieldValue.serverTimestamp(),
+              });
 
-                FirebaseFirestore.instance.collection('info').add({
-                  'name': nameController.text,
-                  'price': double.parse(priceController.text),
-                  'description': descriptionController.text,
-                  'uid': uid,
-                  'timestamp': FieldValue.serverTimestamp(),
-                  'url': downloadUrl,
-                });
-
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .add({'name': nameController.text, 'count': 0});
-              } else {
-                defaultImage();
-              }
+              FirebaseFirestore.instance.collection('users').doc(uid).set({
+                'rooms': FieldValue.arrayUnion([docRef.id])
+              }, SetOptions(merge: true));
             },
           ),
         ],
       ),
       body: ListView(
         children: <Widget>[
-          _image == null
-              ? Image.network(
-                  imageUrl,
-                  errorBuilder: (BuildContext context, Object exception,
-                      StackTrace? stackTrace) {
-                    return const Center(
-                        child: Icon(Icons.circle_outlined, size: 100));
-                  },
-                )
-              : Image.file(File(_image!.path)),
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
               icon: const Icon(Icons.camera_alt),
-              onPressed: () async {
-                final image =
-                    await _picker.pickImage(source: ImageSource.gallery);
-                setState(() {
-                  _image = image;
-                });
-              },
+              onPressed: () async {},
             ),
           ),
           TextField(
-            controller: nameController,
-            decoration: const InputDecoration(hintText: 'Product Name'),
+            controller: brand,
+            decoration: const InputDecoration(hintText: 'Brand Name'),
           ),
           TextField(
-            controller: priceController,
-            decoration: const InputDecoration(hintText: 'Price'),
+            controller: place,
+            decoration: const InputDecoration(hintText: '장소'),
           ),
           TextField(
-            controller: descriptionController,
-            decoration: const InputDecoration(hintText: 'Description'),
+            controller: account,
+            decoration: const InputDecoration(hintText: '계좌번호'),
           ),
         ],
       ),

@@ -74,22 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                   .where('uid', isEqualTo: user!.uid)
                   .get();
 
-              if (userCredential != null) {
-                if (snapShot.docs.isEmpty) {
-                  FirebaseFirestore.instance
-                      .collection('user')
-                      .doc(user!.uid)
-                      .set({
-                    'name': user.displayName,
-                    'email': user.email,
-                    'uid': user.uid,
-                    'status_message':
-                        'I promise to take the test honestly before GOD.',
-                  });
-                }
-
-                Navigator.pushNamed(context, '/item');
-              }
+              Navigator.pushNamed(context, '/item');
             },
             child: Container(
               width: 307,
