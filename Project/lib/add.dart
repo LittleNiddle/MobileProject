@@ -84,7 +84,7 @@ class _AddPageState extends State<AddPage> {
           ),
           TextField(
             controller: brand,
-            decoration: const InputDecoration(hintText: 'Brand Name'),
+            decoration: const InputDecoration(hintText: '브랜드 명'),
           ),
           TextField(
             controller: place,

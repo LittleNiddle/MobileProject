@@ -92,12 +92,10 @@ class _ItemPageState extends State<ItemPage> {
 
                           return Card(
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(15), // 카드 모서리 둥글게
+                              borderRadius: BorderRadius.circular(15),
                               side: BorderSide(
-                                color:
-                                    Colors.blue.withOpacity(0.5), // 카드 테두리 색상
-                                width: 2, // 카드 테두리 두께
+                                color: Colors.blue.withOpacity(0.5),
+                                width: 2,
                               ),
                             ),
                             clipBehavior: Clip.antiAlias,
