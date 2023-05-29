@@ -30,7 +30,7 @@ class _ItemPageState extends State<ItemPage> {
             Navigator.pop(context);
           },
         ),
-        //title: Text(name! + "의 방목록"),
+        title: Text(name! + "의 방목록"),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
@@ -67,11 +67,8 @@ class _ItemPageState extends State<ItemPage> {
                   final docs = snapshot.data!.docs
                       .where((doc) => doc['uid'].contains(cuser!.uid))
                       .toList();
-                  return GridView.builder(
+                  return ListView.builder(
                     itemCount: docs.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
                     itemBuilder: (context, index) {
                       firebase_storage.Reference storageRef = firebase_storage
                           .FirebaseStorage.instance
@@ -94,6 +91,16 @@ class _ItemPageState extends State<ItemPage> {
                           String? imageUrl = imageUrlSnapshot.data;
 
                           return Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(15), // 카드 모서리 둥글게
+                              side: BorderSide(
+                                color:
+                                    Colors.blue.withOpacity(0.5), // 카드 테두리 색상
+                                width: 2, // 카드 테두리 두께
+                              ),
+                            ),
+                            clipBehavior: Clip.antiAlias,
                             child: Column(
                               children: <Widget>[
                                 AspectRatio(
@@ -105,25 +112,34 @@ class _ItemPageState extends State<ItemPage> {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(20, 20, 1, 1),
+                                      const EdgeInsets.fromLTRB(10, 5, 15, 1),
                                   child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: [
-                                          Text("브랜드: " + docs[index]['brand']),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                              "배달 장소: " + docs[index]['place']),
-                                          const SizedBox(height: 5),
-                                          Text("현재 인원: 3/" +
-                                              docs[index]['count'].toString()),
-                                        ],
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                "브랜드: " + docs[index]['brand']),
+                                            Text("배달 장소: " +
+                                                docs[index]['place']),
+                                            Text("현재 인원: 3/" +
+                                                docs[index]['count']
+                                                    .toString()),
+                                          ],
+                                        ),
                                       ),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: const Text('Enter'),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Container(
+                                          height: 40,
+                                          width: 40,
+                                          child: FloatingActionButton(
+                                            onPressed: () {},
+                                            child: Icon(Icons.login),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),

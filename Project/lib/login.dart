@@ -3,8 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     hide EmailAuthProvider, PhoneAuthProvider;
-
-//image 출처 : <a href="https://kr.freepik.com/free-vector/contactless-delivery-during-covid-19-outbreak_16351215.htm#query=delivery&position=12&from_view=keyword&track=sph">작가 rawpixel.com</a> 출처 Freepik
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -56,11 +55,26 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             width: 300,
             height: 300,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color(0xff0084ff),
-            ),
-            child: Image.asset("assets/logo.jpg"),
+            child: FutureBuilder<String>(
+                        future: firebase_storage
+                          .FirebaseStorage.instance
+                          .ref()
+                          .child('logo.png').getDownloadURL(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> imageUrlSnapshot) {
+                          if (imageUrlSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+
+                          if (imageUrlSnapshot.hasError) {
+                            return Text('Error: ${imageUrlSnapshot.error}');
+                          }
+
+                          String? imageUrl = imageUrlSnapshot.data;
+                          return Image.network(imageUrl!);
+                        },
+                      ),
           ),
           const SizedBox(
             height: 30,
