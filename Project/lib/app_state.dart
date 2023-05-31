@@ -10,39 +10,24 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 
 class ApplicationState extends ChangeNotifier {
-  ApplicationState() {
-    //init();
-  }
-
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final CollectionReference rooms =
+      FirebaseFirestore.instance.collection('rooms');
 
-  List<dynamic> _items = [];
-  String _cuser = "";
+  Future<void> addMessage(String message, String roomID) async {
+    User? Cuser = auth.currentUser;
+    CollectionReference texts = rooms.doc(roomID).collection('texts');
 
-  bool isIn(String item) {
-    return _items.contains(item);
+    texts.add({
+      'text': message,
+      'userId': Cuser!.uid,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
   }
 
-  void addItem(String item) async {
-    User? user = auth.currentUser;
-    _cuser = user!.uid;
-    DocumentSnapshot doc =
-        await firestore.collection('wishlists').doc(_cuser).get();
-    _items = List.from(doc['items']);
-    _items.add(item);
-    firestore.collection('wishlists').doc(_cuser).set({'items': _items});
-    notifyListeners();
-  }
-
-  void deleteItem(String item) async {
-    User? user = auth.currentUser;
-    _cuser = user!.uid;
-    DocumentSnapshot doc =
-        await firestore.collection('wishlists').doc(_cuser).get();
-    _items = List.from(doc['items']);
-    _items.remove(item);
-    firestore.collection('wishlists').doc(_cuser).set({'items': _items});
-    notifyListeners();
+  Stream<QuerySnapshot> getMessages(String roomID) {
+    CollectionReference texts = rooms.doc(roomID).collection('texts');
+    return texts.orderBy('timestamp', descending: true).snapshots();
   }
 }

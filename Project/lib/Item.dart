@@ -81,7 +81,7 @@ class _ItemPageState extends State<ItemPage> {
         children: [
           Row(
             children: [
-              Text(name! + "의 방목록"),
+              //Text(name! + "의 방목록"),
               IconButton(
                 icon: const Icon(
                   Icons.search,

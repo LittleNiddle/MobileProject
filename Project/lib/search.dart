@@ -16,7 +16,7 @@ class _SearchPageState extends State<SearchPage> {
   String formattedDateTime = "";
   List<String> _uids = [];
 
-  void addItem(String roomID, User cuser) async {
+  void addUid(String roomID, User cuser) async {
     DocumentSnapshot doc =
         await FirebaseFirestore.instance.collection('rooms').doc(roomID).get();
     _uids = List.from(doc['uid']);
@@ -24,7 +24,7 @@ class _SearchPageState extends State<SearchPage> {
     FirebaseFirestore.instance
         .collection('rooms')
         .doc(roomID)
-        .set({'uid': _uids});
+        .update({'uid': _uids, 'count': FieldValue.increment(1)});
   }
 
   @override
@@ -100,13 +100,12 @@ class _SearchPageState extends State<SearchPage> {
                           DateFormat('MM/dd/kk:mm').format(dateTime);
                       String place = data['place'];
                       String count = data['count'].toString();
-                      bool isIn = data['uid'].contains(cuser);
+                      bool isIn = data['uid'].contains(cuser!.uid);
 
                       return Card(
                         clipBehavior: Clip.antiAlias,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          //mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Expanded(
                                 child: Padding(
@@ -128,12 +127,25 @@ class _SearchPageState extends State<SearchPage> {
                                       child: IconButton(
                                         onPressed: () {
                                           if (isIn) {
-                                            const SnackBar(
-                                                content:
-                                                    Text("이미 방에 입장하였습니다."));
-                                          } else {
-                                            addItem(roomID, cuser!);
-                                            //Navigator.pushNamed(context, '/chat',arguments: roomID);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text("이미 방에 입장하였습니다."),
+                                              ),
+                                            );
+                                          } else if (int.parse(count) < 3) {
+                                            addUid(roomID, cuser!);
+                                            Navigator.pushNamed(
+                                                context, '/chat',
+                                                arguments: roomID);
+                                          }
+                                          if (int.parse(count) == 3) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text("방이 가득 찼습니다."),
+                                              ),
+                                            );
                                           }
                                         },
                                         icon: const Icon(Icons.login),
