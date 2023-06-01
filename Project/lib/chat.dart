@@ -18,17 +18,61 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     final String roomID = ModalRoute.of(context)!.settings.arguments as String;
     final chatService = Provider.of<ApplicationState>(context);
-
     FirebaseAuth auth = FirebaseAuth.instance;
     User? cuser = auth.currentUser;
+
+    Future<void> deleteMyRoom(String roomID, String cuid) async {
+      
+      final DocumentReference<Map<String, dynamic>> roomRef =
+          await FirebaseFirestore.instance
+              .collection('rooms')
+              .doc(roomID);
+
+      final DocumentSnapshot<Map<String, dynamic>> room = await roomRef.get();
+
+      bool isIn() => room['uid'].contains(cuid);
+      List<dynamic> _uids = List<dynamic>.from(room['uid']);
+
+      if (isIn()) {
+        _uids.remove(cuid);
+        await FirebaseFirestore.instance
+            .collection('rooms')
+            .doc(roomID)
+            .update({
+          'uid': _uids,
+          'count': FieldValue.increment(-1),
+        });
+        
+        final DocumentSnapshot<Map<String, dynamic>> updatedRoom = await roomRef.get();
+        if (updatedRoom['count'] == 0) {
+          await FirebaseFirestore.instance
+              .collection('rooms')
+              .doc(roomID)
+              .delete()
+              .then(
+                (doc) => print("Document deleted"),
+                onError: (e) => print("Error updating document $e"),
+              );
+        }
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat'),
         actions: [
-          IconButton(icon: const Icon(Icons.calculate), onPressed:(){Navigator.pushNamed(context, '/calculate');}),
+          IconButton(
+              icon: const Icon(Icons.calculate),
+              onPressed: () {
+                Navigator.pushNamed(context, '/calculate');
+              }),
+          IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () {
+                deleteMyRoom(roomID, cuser!.uid);
+                Navigator.pop(context);
+              }),
         ],
-        
       ),
       body: Column(
         children: <Widget>[
@@ -83,6 +127,7 @@ class _ChatPageState extends State<ChatPage> {
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          Text(formattedDateTime),
                           Expanded(
                             child: Card(
                               child: ListTile(
@@ -94,17 +139,16 @@ class _ChatPageState extends State<ChatPage> {
                                   height: 30,
                                 )),
                                 title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(message['name']! + ": ",
-                                        style: TextStyle(fontSize: 10)),
+                                        style: const TextStyle(fontSize: 10)),
                                     Text(message['text']),
                                   ],
                                 ),
                               ),
                             ),
                           ),
-                          Text(formattedDateTime),
                         ],
                       );
                     }
