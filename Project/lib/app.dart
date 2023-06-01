@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'Item.dart';
+import 'home.dart';
 import 'login.dart';
-import 'Profile.dart';
 import 'add.dart';
-import 'modify.dart';
 import 'app_state.dart';
 import 'calculator.dart';
+import 'chat.dart';
 import 'search.dart';
 
 class App extends StatelessWidget {
@@ -17,12 +16,11 @@ class App extends StatelessWidget {
       title: "",
       initialRoute: '/',
       routes: {
-        '/edit': (BuildContext context) => const EditPage(),
         '/add': (BuildContext context) => const AddPage(),
-        '/item': (BuildContext context) => const ItemPage(),
-        '/profile': (BuildContext context) => const ProfilePage(),
+        '/home': (BuildContext context) => const HomePage(),
         '/calculate': (BuildContext context) => const CalculatePage(),
         '/search': (BuildContext context) => const SearchPage(),
+        '/chat': (BuildContext context) => const ChatPage(),
         '/': (BuildContext context) => const LoginPage(),
       },
     );

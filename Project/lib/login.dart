@@ -17,7 +17,9 @@ class _LoginPageState extends State<LoginPage> {
     FirebaseFirestore.instance.collection('user').add({});
   }
 
+  final GoogleSignIn googleSignIn = GoogleSignIn();
   Future<UserCredential> signInWithGoogle() async {
+    await googleSignIn.signOut();
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     final GoogleSignInAuthentication? googleAuth =
@@ -84,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
               UserCredential? userCredential = await signInWithGoogle();
               final User? user = userCredential.user;
 
-              Navigator.pushNamed(context, '/item');
+              Navigator.pushNamed(context, '/home');
             },
             child: Container(
               width: 307,
@@ -142,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                 UserCredential? userCredential =
                     await FirebaseAuth.instance.signInAnonymously();
 
-                Navigator.pushNamed(context, '/item');
+                Navigator.pushNamed(context, '/home');
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),

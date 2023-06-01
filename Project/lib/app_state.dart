@@ -19,15 +19,19 @@ class ApplicationState extends ChangeNotifier {
     User? Cuser = auth.currentUser;
     CollectionReference texts = rooms.doc(roomID).collection('texts');
 
-    texts.add({
+    await texts.add({
       'text': message,
       'userId': Cuser!.uid,
       'timestamp': FieldValue.serverTimestamp(),
+      'photoURL': Cuser!.photoURL,
+      'name': Cuser!.displayName
     });
+    
+    //await Future.delayed(Duration(seconds: 1)); // Wait for 2 seconds
   }
 
   Stream<QuerySnapshot> getMessages(String roomID) {
     CollectionReference texts = rooms.doc(roomID).collection('texts');
-    return texts.orderBy('timestamp', descending: true).snapshots();
+    return texts.orderBy('timestamp', descending: false).snapshots();
   }
 }

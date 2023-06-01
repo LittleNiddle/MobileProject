@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'app_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class ItemPage extends StatefulWidget {
-  const ItemPage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
   @override
-  _ItemPageState createState() => _ItemPageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _ItemPageState extends State<ItemPage> {
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -63,7 +61,10 @@ class _ItemPageState extends State<ItemPage> {
               semanticLabel: 'search',
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/search', arguments: _search.text);
+              if (_search.text.isNotEmpty) {
+                Navigator.pushNamed(context, '/search',
+                    arguments: _search.text);
+              }
             },
           ),
           IconButton(
@@ -80,17 +81,9 @@ class _ItemPageState extends State<ItemPage> {
       body: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //Text(name! + "의 방목록"),
-              IconButton(
-                icon: const Icon(
-                  Icons.search,
-                  semanticLabel: 'search',
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/search');
-                },
-              ),
+              Text(name! + "의 방목록"),
             ],
           ),
           Expanded(
@@ -172,7 +165,12 @@ class _ItemPageState extends State<ItemPage> {
                                           height: 40,
                                           width: 40,
                                           child: IconButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Navigator.pushNamed(
+                                                  context, '/chat',
+                                                  arguments: docs[index]
+                                                      ['roomId']);
+                                            },
                                             icon: Icon(Icons.login),
                                           ),
                                         ),
