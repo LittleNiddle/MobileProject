@@ -26,8 +26,6 @@ class ApplicationState extends ChangeNotifier {
       'photoURL': Cuser!.photoURL,
       'name': Cuser!.displayName
     });
-    
-    //await Future.delayed(Duration(seconds: 1)); // Wait for 2 seconds
   }
 
   Stream<QuerySnapshot> getMessages(String roomID) {

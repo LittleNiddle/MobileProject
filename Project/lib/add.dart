@@ -27,6 +27,14 @@ class _AddPageState extends State<AddPage> {
     super.initState();
   }
 
+  void NumberCreate(String brandName) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    await firestore.collection('ChartInfo').doc(brandName).set({
+      'roomCount': FieldValue.increment(1),
+    }, SetOptions(merge: true));
+  }
+
   @override
   Widget build(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -48,7 +56,7 @@ class _AddPageState extends State<AddPage> {
                 if (_formKey.currentState!.validate()) {
                   DocumentReference docRef =
                       await FirebaseFirestore.instance.collection('rooms').add({
-                    'brand': brand.text,
+                    'brand': brand.text.toLowerCase(),
                     'timestamp': FieldValue.serverTimestamp(),
                     'place': place.text,
                     'count': 1,
@@ -56,17 +64,8 @@ class _AddPageState extends State<AddPage> {
                     'account': account.text,
                   });
                   docRef.update({'roomId': docRef.id});
-    
-                  // docRef.collection('texts').add({
-                  //   'text': name! + "님이 입장하셨습니다.",
-                  //   'timestamp': FieldValue.serverTimestamp(),
-                  //   'userId': cuser.uid,
-                  //   'name': cuser.displayName,
-                  //   'photoURL': cuser.photoURL,
-                  // });
-                  // FirebaseFirestore.instance.collection('users').doc(uid).set({
-                  //   'rooms': FieldValue.arrayUnion([docRef.id])
-                  // }, SetOptions(merge: true));
+
+                  NumberCreate(brand.text.toLowerCase());
                 }
                 Navigator.pop(context);
               },
@@ -74,39 +73,56 @@ class _AddPageState extends State<AddPage> {
           ],
         ),
         body: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           children: <Widget>[
-            TextFormField(
-              controller: brand,
-              decoration: const InputDecoration(hintText: '브랜드 명'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return '브랜드 명을 입력해주세요.';
-                } else {
-                  return null;
-                }
-              },
-            ),
-            TextFormField(
-              controller: place,
-              decoration: const InputDecoration(hintText: '장소'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return '장소를 입력해 주세요.';
-                } else {
-                  return null;
-                }
-              },
-            ),
-            TextFormField(
-              controller: account,
-              decoration: const InputDecoration(hintText: '계좌번호'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return '계좌를 입력해 주세요.';
-                } else {
-                  return null;
-                }
-              },
+            Column(
+              children: [
+                const SizedBox(height: 30.0),
+                TextFormField(
+                  controller: brand,
+                  decoration: const InputDecoration(
+                    filled: true,
+                    labelText: '브랜드 명',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '브랜드 명을 입력해주세요.';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const SizedBox(height: 12.0),
+                TextFormField(
+                  controller: place,
+                  decoration: const InputDecoration(
+                    filled: true,
+                    labelText: '장소',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '장소를 입력해 주세요.';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const SizedBox(height: 12.0),
+                TextFormField(
+                  controller: account,
+                  decoration: const InputDecoration(
+                    filled: true,
+                    labelText: '계좌 번호',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '계좌를 입력해 주세요.';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+              ],
             ),
           ],
         ),

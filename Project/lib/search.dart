@@ -33,8 +33,10 @@ class _SearchPageState extends State<SearchPage> {
 
     FirebaseAuth auth = FirebaseAuth.instance;
     User? cuser = auth.currentUser;
-    firebase_storage.Reference storageRef =
-        firebase_storage.FirebaseStorage.instance.ref().child(brand + '.png');
+    firebase_storage.Reference storageRef = firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .child('Brands/' + brand + '.png');
 
     return Scaffold(
       appBar: AppBar(

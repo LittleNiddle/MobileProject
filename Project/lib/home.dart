@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               if (_search.text.isNotEmpty) {
                 Navigator.pushNamed(context, '/search',
-                    arguments: _search.text);
+                    arguments: _search.text.toLowerCase());
               }
             },
           ),
@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                       firebase_storage.Reference storageRef = firebase_storage
                           .FirebaseStorage.instance
                           .ref()
-                          .child(docs[index]['brand'] + '.png');
+                          .child('Brands/' + docs[index]['brand'] + '.png');
 
                       return FutureBuilder<String>(
                         future: storageRef.getDownloadURL(),
