@@ -80,6 +80,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -139,9 +140,13 @@ class _HomePageState extends State<HomePage> {
                                     fit: BoxFit.fitWidth,
                                   ),
                                 ),
+                                const Divider(
+                                  color: Colors.blue,
+                                  thickness: 1,
+                                ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(10, 5, 15, 1),
+                                      const EdgeInsets.fromLTRB(10, 1, 15, 12),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -171,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                                                   arguments: docs[index]
                                                       ['roomId']);
                                             },
-                                            icon: Icon(Icons.login),
+                                            icon: const Icon(Icons.login),
                                           ),
                                         ),
                                       ),
