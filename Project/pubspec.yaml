@@ -13,6 +13,7 @@ dependencies:
   shrine_images: ^2.0.2
   firebase_storage: ^11.1.2
   permission_handler: ^10.2.0
+  d_chart: ^2.2.11
 
 dev_dependencies:
   

@@ -5,6 +5,7 @@ import 'add.dart';
 import 'app_state.dart';
 import 'calculator.dart';
 import 'chat.dart';
+import 'mypage.dart';
 import 'search.dart';
 
 class App extends StatelessWidget {
@@ -21,6 +22,7 @@ class App extends StatelessWidget {
         '/calculate': (BuildContext context) => const CalculatePage(),
         '/search': (BuildContext context) => const SearchPage(),
         '/chat': (BuildContext context) => const ChatPage(),
+        '/mypage': (BuildContext context) => const MyPage(),
         '/': (BuildContext context) => const LoginPage(),
       },
     );

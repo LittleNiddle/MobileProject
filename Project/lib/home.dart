@@ -241,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.grey,
                 ),
               ),
-              onTap: () {},
+              onTap: () {Navigator.pushNamed(context, '/mypage');},
             ),
           ],
         ),

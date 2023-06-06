@@ -32,6 +32,7 @@ class _AddPageState extends State<AddPage> {
 
     await firestore.collection('ChartInfo').doc(brandName).set({
       'roomCount': FieldValue.increment(1),
+      'brand': brandName,
     }, SetOptions(merge: true));
   }
 

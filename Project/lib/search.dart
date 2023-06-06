@@ -133,6 +133,7 @@ class _SearchPageState extends State<SearchPage> {
                                                 .showSnackBar(
                                               const SnackBar(
                                                 content: Text("이미 방에 입장하였습니다."),
+                                                duration: Duration(seconds: 1),
                                               ),
                                             );
                                           } else if (int.parse(count) < 3) {
