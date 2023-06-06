@@ -22,11 +22,8 @@ class _ChatPageState extends State<ChatPage> {
     User? cuser = auth.currentUser;
 
     Future<void> deleteMyRoom(String roomID, String cuid) async {
-      
       final DocumentReference<Map<String, dynamic>> roomRef =
-          await FirebaseFirestore.instance
-              .collection('rooms')
-              .doc(roomID);
+          await FirebaseFirestore.instance.collection('rooms').doc(roomID);
 
       final DocumentSnapshot<Map<String, dynamic>> room = await roomRef.get();
 
@@ -42,8 +39,9 @@ class _ChatPageState extends State<ChatPage> {
           'uid': _uids,
           'count': FieldValue.increment(-1),
         });
-        
-        final DocumentSnapshot<Map<String, dynamic>> updatedRoom = await roomRef.get();
+
+        final DocumentSnapshot<Map<String, dynamic>> updatedRoom =
+            await roomRef.get();
         if (updatedRoom['count'] == 0) {
           await FirebaseFirestore.instance
               .collection('rooms')
@@ -60,6 +58,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat'),
+        centerTitle: true,
         actions: [
           IconButton(
               icon: const Icon(Icons.calculate),

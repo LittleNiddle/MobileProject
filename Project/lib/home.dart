@@ -20,16 +20,6 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.logout,
-            semanticLabel: 'logout',
-          ),
-          onPressed: () {
-            auth.signOut();
-            Navigator.pop(context);
-          },
-        ),
         title: Expanded(
           child: Container(
             height: 35,
@@ -65,15 +55,6 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pushNamed(context, '/search',
                     arguments: _search.text.toLowerCase());
               }
-            },
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.add,
-              semanticLabel: 'add',
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/add');
             },
           ),
         ],
@@ -195,6 +176,75 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              padding: EdgeInsets.fromLTRB(30, 100, 0, 0),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Menu',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            ListTile(
+              contentPadding: const EdgeInsets.only(left: 30.0),
+              leading: const Icon(
+                Icons.logout,
+                color: Colors.blue,
+              ),
+              title: const Text(
+                'Log Out',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+              onTap: () {
+                auth.signOut();
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              contentPadding: const EdgeInsets.only(left: 30.0),
+              leading: const Icon(
+                Icons.add,
+                color: Colors.blue,
+              ),
+              title: const Text(
+                'Create Room',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, '/add');
+              },
+            ),
+            ListTile(
+              contentPadding: const EdgeInsets.only(left: 30.0),
+              leading: const Icon(
+                Icons.person,
+                color: Colors.blue,
+              ),
+              title: const Text(
+                'My page',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
     );
   }

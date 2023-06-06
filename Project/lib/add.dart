@@ -37,10 +37,6 @@ class _AddPageState extends State<AddPage> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? cuser = auth.currentUser;
-    String? name = cuser!.displayName;
-
     final _formKey = GlobalKey<FormState>();
 
     return Form(

@@ -49,7 +49,7 @@ class _SearchPageState extends State<SearchPage> {
             Navigator.pop(context);
           },
         ),
-        title: const Text("검색"),
+        title: const Text("Search"),
         centerTitle: true,
       ),
       body: Column(
