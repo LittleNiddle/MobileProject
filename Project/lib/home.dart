@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -75,10 +75,10 @@ class _HomePageState extends State<HomePage> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else {
                   final docs = snapshot.data!.docs
-                      .where((doc) => doc['uid'].contains(cuser!.uid))
+                      .where((doc) => doc['uid'].contains(cuser.uid))
                       .toList();
                   return ListView.builder(
                     itemCount: docs.length,
@@ -154,10 +154,14 @@ class _HomePageState extends State<HomePage> {
                                             onPressed: () {
                                               Navigator.pushNamed(
                                                   context, '/chat',
-                                                  arguments: { 
-                                                    'brand' : docs[index]['brand'].toString(), 
-                                                    'roomId' : docs[index]['roomId'].toString()
-                                                    });
+                                                  arguments: {
+                                                    'brand': docs[index]
+                                                            ['brand']
+                                                        .toString(),
+                                                    'roomId': docs[index]
+                                                            ['roomId']
+                                                        .toString()
+                                                  });
                                             },
                                             icon: const Icon(Icons.login),
                                           ),
@@ -243,7 +247,9 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.grey,
                 ),
               ),
-              onTap: () {Navigator.pushNamed(context, '/mypage');},
+              onTap: () {
+                Navigator.pushNamed(context, '/mypage');
+              },
             ),
           ],
         ),

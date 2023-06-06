@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'app_state.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -137,13 +135,12 @@ class _SearchPageState extends State<SearchPage> {
                                               ),
                                             );
                                           } else if (int.parse(count) < 3) {
-                                            addUid(roomID, cuser!);
+                                            addUid(roomID, cuser);
                                             Navigator.pushNamed(
-                                                  context, '/chat',
-                                                  arguments: { 
-                                                    'brand' : brandName, 
-                                                    'roomId' : roomID
-                                                    });
+                                                context, '/chat', arguments: {
+                                              'brand': brandName,
+                                              'roomId': roomID
+                                            });
                                           }
                                           if (int.parse(count) == 3) {
                                             ScaffoldMessenger.of(context)

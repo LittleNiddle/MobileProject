@@ -83,9 +83,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           InkWell(
             onTap: () async {
-              UserCredential? userCredential = await signInWithGoogle();
-              final User? user = userCredential.user;
-
+              await signInWithGoogle();
               Navigator.pushNamed(context, '/home');
             },
             child: Container(
@@ -124,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         SizedBox(width: 24),
-                        Text(
+                        const Text(
                           "Google 로그인",
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -139,17 +137,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          ElevatedButton(
-              onPressed: () async {
-                UserCredential? userCredential =
-                    await FirebaseAuth.instance.signInAnonymously();
-
-                Navigator.pushNamed(context, '/home');
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
-              ),
-              child: const Text("Guest")),
         ],
       ),
     );

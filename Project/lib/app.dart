@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'login.dart';
 import 'add.dart';
-import 'app_state.dart';
 import 'calculator.dart';
 import 'chat.dart';
 import 'mypage.dart';

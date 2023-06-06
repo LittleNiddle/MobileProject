@@ -22,39 +22,39 @@ class _CalculatePageState extends State<CalculatePage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  void addChartInfo(String brand) async{
-    final CollectionReference roomsCollection = FirebaseFirestore.instance.collection('rooms');
-final CollectionReference chartCollection = FirebaseFirestore.instance.collection('MyChart');
+  void addChartInfo(String brand) async {
+    final CollectionReference roomsCollection =
+        FirebaseFirestore.instance.collection('rooms');
+    final CollectionReference chartCollection =
+        FirebaseFirestore.instance.collection('MyChart');
 
 // Get all documents from 'rooms' collection
-final QuerySnapshot roomsSnapshot = await roomsCollection.get();
+    final QuerySnapshot roomsSnapshot = await roomsCollection.get();
 
 // Iterate over each document in 'rooms'
-for (final doc in roomsSnapshot.docs) {
-  final data = doc.data() as Map<String, dynamic>?;
-  if (data != null) {
-    // Check if 'uid' field exists and is a List
-    if (data['uid'] is List) {
-      final uidList = data['uid'] as List<dynamic>;
-      
-      // Iterate over each 'uid' in the list
-      for (final uid in uidList) {
-        // Access the document in 'Chart' collection with 'uid' as the document ID
-        final docRef = chartCollection.doc(uid);
-        
+    for (final doc in roomsSnapshot.docs) {
+      final data = doc.data() as Map<String, dynamic>?;
+      if (data != null) {
+        // Check if 'uid' field exists and is a List
+        if (data['uid'] is List) {
+          final uidList = data['uid'] as List<dynamic>;
 
-        final brandsCollection = docRef.collection('Brands');
+          // Iterate over each 'uid' in the list
+          for (final uid in uidList) {
+            // Access the document in 'Chart' collection with 'uid' as the document ID
+            final docRef = chartCollection.doc(uid);
 
-        
-        final brandDocRef = brandsCollection.doc(brand);
-        await brandDocRef.set({
-          'count': FieldValue.increment(1),
-          'brandName': brand,
-        });
+            final brandsCollection = docRef.collection('Brands');
+
+            final brandDocRef = brandsCollection.doc(brand);
+            await brandDocRef.set({
+              'count': FieldValue.increment(1),
+              'brand': brand,
+            });
+          }
+        }
       }
     }
-  }
-}
   }
 
   void calculate() {

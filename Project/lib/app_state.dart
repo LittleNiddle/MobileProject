@@ -1,13 +1,8 @@
-import 'dart:async';
-
+import 'dart:async' show Future, Stream;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     hide EmailAuthProvider, PhoneAuthProvider;
-import 'package:firebase_core/firebase_core.dart';
-
 import 'package:flutter/material.dart';
-
-import 'firebase_options.dart';
 
 class ApplicationState extends ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -16,15 +11,15 @@ class ApplicationState extends ChangeNotifier {
       FirebaseFirestore.instance.collection('rooms');
 
   Future<void> addMessage(String message, String roomID) async {
-    User? Cuser = auth.currentUser;
+    User? cuser = auth.currentUser;
     CollectionReference texts = rooms.doc(roomID).collection('texts');
 
     await texts.add({
       'text': message,
-      'userId': Cuser!.uid,
+      'userId': cuser!.uid,
       'timestamp': FieldValue.serverTimestamp(),
-      'photoURL': Cuser!.photoURL,
-      'name': Cuser!.displayName
+      'photoURL': cuser.photoURL,
+      'name': cuser.displayName
     });
   }
 
