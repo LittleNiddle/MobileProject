@@ -4,6 +4,10 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+FirebaseAuth auth = FirebaseAuth.instance;
+User? user = auth.currentUser;
 
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -14,6 +18,26 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   Future<List<Map<String, dynamic>>> getBrandData() async {
+    final CollectionReference brandCollection =
+        FirebaseFirestore.instance.collection('ChartInfo');
+    final QuerySnapshot snapshot = await brandCollection.get();
+
+    return snapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>?;
+      if (data != null) {
+        return {
+          'brand': data['brandName'] ?? '',
+          'count': data['roomCount'] ?? 0,
+        };
+      }
+      return {'brand': '', 'count': 0};
+    }).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> getMyChartData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    user = auth.currentUser;
     final CollectionReference brandCollection =
         FirebaseFirestore.instance.collection('ChartInfo');
     final QuerySnapshot snapshot = await brandCollection.get();
@@ -54,10 +78,13 @@ class _MyPageState extends State<MyPage> {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      if(snapshot.data == null) return Text('No Data');
+                      if (snapshot.data == null) return Text('No Data');
                       final data = snapshot.data as List<Map<String, dynamic>>;
-                      final chartData = data.map((item){
-                        return {'domain': item['brand'], 'measure': item['count']};
+                      final chartData = data.map((item) {
+                        return {
+                          'domain': item['brand'],
+                          'measure': item['count']
+                        };
                       }).toList();
                       return DChartBar(
                         data: [
@@ -92,10 +119,13 @@ class _MyPageState extends State<MyPage> {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      if(snapshot.data == null) return Text('No Data');
+                      if (snapshot.data == null) return Text('No Data');
                       final data = snapshot.data as List<Map<String, dynamic>>;
-                      final chartData = data.map((item){
-                        return {'domain': item['brand'], 'measure': item['count']};
+                      final chartData = data.map((item) {
+                        return {
+                          'domain': item['brand'],
+                          'measure': item['count']
+                        };
                       }).toList();
                       return DChartBar(
                         data: [

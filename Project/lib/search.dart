@@ -139,8 +139,11 @@ class _SearchPageState extends State<SearchPage> {
                                           } else if (int.parse(count) < 3) {
                                             addUid(roomID, cuser!);
                                             Navigator.pushNamed(
-                                                context, '/chat',
-                                                arguments: roomID);
+                                                  context, '/chat',
+                                                  arguments: { 
+                                                    'brand' : brandName, 
+                                                    'roomId' : roomID
+                                                    });
                                           }
                                           if (int.parse(count) == 3) {
                                             ScaffoldMessenger.of(context)

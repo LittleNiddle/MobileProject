@@ -16,7 +16,9 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String roomID = ModalRoute.of(context)!.settings.arguments as String;
+    final Map<String, String> info = ModalRoute.of(context)!.settings.arguments as Map<String,String>;
+     final String? brand = info['brand'];
+    final String ? roomID = info['roomId'];
     final chatService = Provider.of<ApplicationState>(context);
     FirebaseAuth auth = FirebaseAuth.instance;
     User? cuser = auth.currentUser;
@@ -63,12 +65,12 @@ class _ChatPageState extends State<ChatPage> {
           IconButton(
               icon: const Icon(Icons.calculate),
               onPressed: () {
-                Navigator.pushNamed(context, '/calculate');
+                Navigator.pushNamed(context, '/calculate', arguments: brand);
               }),
           IconButton(
               icon: const Icon(Icons.logout),
               onPressed: () {
-                deleteMyRoom(roomID, cuser!.uid);
+                deleteMyRoom(roomID!, cuser!.uid);
                 Navigator.pop(context);
               }),
         ],
@@ -77,7 +79,7 @@ class _ChatPageState extends State<ChatPage> {
         children: <Widget>[
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: chatService.getMessages(roomID),
+              stream: chatService.getMessages(roomID!),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return const CircularProgressIndicator();
                 return ListView.builder(

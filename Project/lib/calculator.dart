@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CalculatePage extends StatefulWidget {
   const CalculatePage({Key? key}) : super(key: key);
@@ -20,6 +21,41 @@ class _CalculatePageState extends State<CalculatePage> {
   String message = "";
 
   final _formKey = GlobalKey<FormState>();
+
+  void addChartInfo(String brand) async{
+    final CollectionReference roomsCollection = FirebaseFirestore.instance.collection('rooms');
+final CollectionReference chartCollection = FirebaseFirestore.instance.collection('MyChart');
+
+// Get all documents from 'rooms' collection
+final QuerySnapshot roomsSnapshot = await roomsCollection.get();
+
+// Iterate over each document in 'rooms'
+for (final doc in roomsSnapshot.docs) {
+  final data = doc.data() as Map<String, dynamic>?;
+  if (data != null) {
+    // Check if 'uid' field exists and is a List
+    if (data['uid'] is List) {
+      final uidList = data['uid'] as List<dynamic>;
+      
+      // Iterate over each 'uid' in the list
+      for (final uid in uidList) {
+        // Access the document in 'Chart' collection with 'uid' as the document ID
+        final docRef = chartCollection.doc(uid);
+        
+
+        final brandsCollection = docRef.collection('Brands');
+
+        
+        final brandDocRef = brandsCollection.doc(brand);
+        await brandDocRef.set({
+          'count': FieldValue.increment(1),
+          'brandName': brand,
+        });
+      }
+    }
+  }
+}
+  }
 
   void calculate() {
     pay1 = int.parse(_user1Controller.text);
@@ -42,6 +78,7 @@ class _CalculatePageState extends State<CalculatePage> {
 
   @override
   Widget build(BuildContext context) {
+    final String brand = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       appBar: AppBar(
         title: const Text("정산하기"),
@@ -170,14 +207,17 @@ class _CalculatePageState extends State<CalculatePage> {
                     ElevatedButton(
                       child: const Text('정산하기'),
                       onPressed: () {
-                        calculate();
-                        makeMessage();
-                        Clipboard.setData(ClipboardData(text: message));
                         if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(message)),
-                          );
-                          //Navigator.pushNamed(context, '/chatting');
+                          calculate();
+                          makeMessage();
+                          addChartInfo(brand);
+                          Clipboard.setData(ClipboardData(text: message));
+                          if (_formKey.currentState!.validate()) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(message)),
+                            );
+                            //Navigator.pushNamed(context, '/chatting');
+                          }
                         }
                       },
                     ),

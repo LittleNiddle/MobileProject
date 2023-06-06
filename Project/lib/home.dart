@@ -154,8 +154,10 @@ class _HomePageState extends State<HomePage> {
                                             onPressed: () {
                                               Navigator.pushNamed(
                                                   context, '/chat',
-                                                  arguments: docs[index]
-                                                      ['roomId']);
+                                                  arguments: { 
+                                                    'brand' : docs[index]['brand'].toString(), 
+                                                    'roomId' : docs[index]['roomId'].toString()
+                                                    });
                                             },
                                             icon: const Icon(Icons.login),
                                           ),
