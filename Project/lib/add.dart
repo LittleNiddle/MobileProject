@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-FirebaseAuth auth = FirebaseAuth.instance;
-User? user = auth.currentUser;
-String uid = user!.uid;
-
 class AddPage extends StatefulWidget {
   const AddPage({Key? key}) : super(key: key);
 
@@ -34,6 +30,9 @@ class _AddPageState extends State<AddPage> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    String uid = user!.uid;
     final _formKey = GlobalKey<FormState>();
 
     return Form(
